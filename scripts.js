@@ -39,6 +39,37 @@ function didPlayerWin() {
   }
 }
 
+//Analisa se as cartas irao virar ou nao
+function processSelectedCard() {
+  let card = this;
+  if (document.querySelectorAll(".flipped").length > 2)
+    unflipCards; //Barra a escolha de mais do que 2 cartas por jogada
+  else if (document.querySelector(".flipped") === null) {
+    flip(card);
+  } else if (
+    card.children[0].classList.contains("flipped") ||
+    card.children[0].classList.contains("correct")
+  ) {
+    console.log("Clicou repetido"); // Não faz nada pq clicou na mesma carta
+  } else {
+    let firstCard = document.querySelector(".flipped");
+    let firstCardImg = firstCard.nextElementSibling.firstChild.src;
+    let secondCardImg = card.children[0].nextElementSibling.firstChild.src;
+
+    if (firstCardImg == secondCardImg) {
+      flip(card);
+
+      correctCards();
+      unflipCards();
+
+      setTimeout(didPlayerWin, 500);
+    } else {
+      flip(card);
+      setTimeout(unflipCards, 1000);
+    }
+  }
+}
+
 // CÓDIGO
 
 let cardNumber = 0;
@@ -94,35 +125,6 @@ for (let i = 0; i < cardNumber; i++) {
 }
 
 let rounds = 0;
-
-//Analisa se as cartas irao virar ou nao
-function processSelectedCard() {
-  let card = this;
-  if (document.querySelector(".flipped") === null) {
-    flip(card);
-  } else if (
-    card.children[0].classList.contains("flipped") ||
-    card.children[0].classList.contains("correct")
-  ) {
-    console.log("Clicou repetido"); // Não faz nada pq clicou na mesma carta
-  } else {
-    let firstCard = document.querySelector(".flipped");
-    let firstCardImg = firstCard.nextElementSibling.firstChild.src;
-    let secondCardImg = card.children[0].nextElementSibling.firstChild.src;
-
-    if (firstCardImg == secondCardImg) {
-      flip(card);
-
-      correctCards();
-      unflipCards();
-
-      setTimeout(didPlayerWin, 500);
-    } else {
-      flip(card);
-      setTimeout(unflipCards, 1000);
-    }
-  }
-}
 
 // virar a carta
 for (const card of cards) {
