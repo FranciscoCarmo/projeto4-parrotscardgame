@@ -73,7 +73,7 @@ h1 {
   transform: rotateY(-180deg);
 }
 
-@media (max-width: 614px) {
+@media (max-width: 480px) {
   h1 {
     font-size: 36px;
     max-width: 275px;
