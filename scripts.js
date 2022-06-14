@@ -35,7 +35,10 @@ function correctCards() {
 function didPlayerWin() {
   correctFronts = document.querySelectorAll(".correct");
   if (correctFronts.length == cardNumber * 2) {
-    alert(`Você ganhou em ${rounds} jogadas!`);
+    alert(`Você ganhou em ${rounds} jogadas em ${timer} segundos!`);
+    won = true;
+
+    setTimeout(reiniciar, 1000);
   }
 }
 
@@ -70,63 +73,130 @@ function processSelectedCard() {
   }
 }
 
+function addSecond() {
+  if (!won) {
+    timer++;
+    document.querySelector("p").textContent = timer;
+  }
+}
+
+function reiniciar() {
+  let answer = "";
+  while (answer !== "sim" && answer !== "não") {
+    answer = prompt("Deseja reiniciar a partida? (sim ou não)");
+
+    if (answer == "sim") {
+      let correct = document.querySelectorAll(".correct");
+      for (const correctCards of correct) {
+        correctCards.classList.remove("correct");
+      }
+
+      let flipped = document.querySelectorAll(".flipped");
+      for (const flippedCards of flipped) {
+        flippedCards.classList.remove("flipped");
+      }
+
+      //remover todos os gifs
+      let gifs = document.querySelectorAll(".back-face>img");
+      for (const gif of gifs) {
+        gif.remove();
+      }
+
+      //reset as variaveis e chama as funcoes
+      cardNumber = 0;
+
+      allCards = document.querySelectorAll(".card");
+      cards = []; // cria a matriz das cartas do jogo
+
+      iniciar();
+      createCards(); //Chama a funcao que cria as cartas
+
+      rounds = 0;
+      won = false;
+      timer = 0;
+
+      addFlipEvent();
+    } else if (answer == "não") {
+      return;
+    } else {
+      alert("A resposta deve ser sim ou não.");
+    }
+  }
+}
+
+function iniciar() {
+  while (cardNumber < 4 || cardNumber > 14 || cardNumber % 2 == 1) {
+    cardNumber = prompt("Quantas cartas terá o jogo? (min = 4 e máx = 14)");
+    if (cardNumber < 4 || cardNumber > 14 || cardNumber % 2 == 1)
+      alert("O valor deve ser um número par entre 4 e 14.");
+  }
+}
+
+function createCards() {
+  for (let i = 0; i < allCards.length; i++) {
+    allCards[i].classList.add("hidden");
+  }
+
+  for (let i = 0; i < cardNumber; i++) {
+    allCards[i].classList.remove("hidden");
+    cards.push(allCards[i]);
+  }
+
+  // Cria matriz dos links dos gifs
+  let gifs = [
+    "images/bobrossparrot.gif",
+    "images/bobrossparrot.gif",
+    "images/explodyparrot.gif",
+    "images/explodyparrot.gif",
+    "images/fiestaparrot.gif",
+    "images/fiestaparrot.gif",
+    "images/metalparrot.gif",
+    "images/metalparrot.gif",
+    "images/revertitparrot.gif",
+    "images/revertitparrot.gif",
+    "images/tripletsparrot.gif",
+    "images/tripletsparrot.gif",
+    "images/unicornparrot.gif",
+    "images/unicornparrot.gif",
+  ];
+
+  let selectedGifs = [];
+
+  // Seleciona o numero correto de gifs
+  for (let i = 0; i < cardNumber; i++) {
+    selectedGifs.push(gifs[i]);
+  }
+
+  //Embaralha os links
+  selectedGifs = selectedGifs.sort(comparador); // Após esta linha, a minhaArray estará embaralhada
+
+  for (let i = 0; i < cardNumber; i++) {
+    let img = document.createElement("img");
+    let faceDown = cards[i].querySelector(".back-face");
+    img.src = selectedGifs[i];
+    faceDown.appendChild(img);
+  }
+}
+
+function addFlipEvent() {
+  for (const card of cards) {
+    card.addEventListener("click", processSelectedCard);
+  }
+}
+
 // CÓDIGO
 
 let cardNumber = 0;
 
-while (cardNumber < 4 || cardNumber > 14 || cardNumber % 2 == 1) {
-  cardNumber = prompt("Quantas cartas terá o jogo? (min = 4 e máx = 14)");
-  if (cardNumber < 4 || cardNumber > 14 || cardNumber % 2 == 1)
-    alert("O valor deve ser um número par entre 4 e 14.");
-}
-
 let allCards = document.querySelectorAll(".card");
 let cards = []; // cria a matriz das cartas do jogo
-
-for (let i = 0; i < cardNumber; i++) {
-  allCards[i].classList.remove("hidden");
-  cards.push(allCards[i]);
-}
-
-// Cria matriz dos links dos gifs
-
-let gifs = [
-  "images/bobrossparrot.gif",
-  "images/bobrossparrot.gif",
-  "images/explodyparrot.gif",
-  "images/explodyparrot.gif",
-  "images/fiestaparrot.gif",
-  "images/fiestaparrot.gif",
-  "images/metalparrot.gif",
-  "images/metalparrot.gif",
-  "images/revertitparrot.gif",
-  "images/revertitparrot.gif",
-  "images/tripletsparrot.gif",
-  "images/tripletsparrot.gif",
-  "images/unicornparrot.gif",
-  "images/unicornparrot.gif",
-];
-
-let selectedGifs = [];
-
-// Seleciona o numero correto de gifs
-for (let i = 0; i < cardNumber; i++) {
-  selectedGifs.push(gifs[i]);
-}
-
-//Embaralha os links
-selectedGifs = selectedGifs.sort(comparador); // Após esta linha, a minhaArray estará embaralhada
-
-for (let i = 0; i < cardNumber; i++) {
-  let img = document.createElement("img");
-  let faceDown = cards[i].querySelector(".back-face");
-  img.src = selectedGifs[i];
-  faceDown.appendChild(img);
-}
-
 let rounds = 0;
+let won = false;
+let timer = 0;
 
-// virar a carta
-for (const card of cards) {
-  card.addEventListener("click", processSelectedCard);
-}
+iniciar();
+createCards(); //Chama a funcao que cria as cartas
+
+addFlipEvent();
+
+setInterval(addSecond, 1000);
