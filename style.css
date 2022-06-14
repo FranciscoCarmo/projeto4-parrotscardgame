@@ -7,6 +7,8 @@ body {
   flex-direction: column;
   align-items: center;
   font-family: "Roboto", sans-serif;
+
+  min-width: 120px;
 }
 
 .hidden {
@@ -65,11 +67,11 @@ h1 {
   transform: rotateY(180deg);
 }
 
-.card:hover .back-face {
+.card:active .back-face {
   transform: rotateY(0deg);
 }
 
-.card:hover .front-face {
+.card:active .front-face {
   transform: rotateY(-180deg);
 }
 
