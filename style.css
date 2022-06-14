@@ -72,3 +72,15 @@ h1 {
 .card:hover .front-face {
   transform: rotateY(-180deg);
 }
+
+@media (max-width: 614px) {
+  h1 {
+    font-size: 36px;
+    max-width: 275px;
+    overflow-wrap: break-word;
+  }
+
+  .board {
+    max-width: 200px;
+  }
+}
