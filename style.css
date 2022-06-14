@@ -67,11 +67,19 @@ h1 {
   transform: rotateY(180deg);
 }
 
-.card:active .back-face {
+.back-face.flipped {
   transform: rotateY(0deg);
 }
 
-.card:active .front-face {
+.front-face.flipped {
+  transform: rotateY(-180deg);
+}
+
+.back-face.correct {
+  transform: rotateY(0deg);
+}
+
+.front-face.correct {
   transform: rotateY(-180deg);
 }
 
